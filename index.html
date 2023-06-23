@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Generateur de questions basé sur chatGPT</title>
+
+	<!-- Basic Page Needs
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="JF Parmentier">
+
+	<!-- Mobile Specific Metas
+	––––––––––––––––––––––––––––––––––––––––––––––––––  -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- FONT
+	––––––––––––––––––––––––––––––––––––––––––––––––––  -->
+	<link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" referrerpolicy="no-referrer" />
+
+	<!-- CSS
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/skeleton.css">
+	<link rel="stylesheet" href="css/extensionBoutons.css">
+	
+	<!-- Javascript
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<script src="scripts/vue.js"></script>	
+	<script src="scripts/gestionPage.js"></script>
+	<script src="scripts/generationQR.js"></script>
+	<script src="scripts/lecturePDF.js"></script>
+	<script src="https://npmcdn.com/pdfjs-dist/build/pdf.js"></script>
+	<!-- <script src="scripts/pdfjs/pdf.js"></script> -->
+	
+
+</head>
+
+<body onload="initialisePage()">
+
+	<!-- Primary Page Layout
+	–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+	<div class="container" id="conteneur">
+
+		<!-- Entête -->
+		<div class="vue-fixe" style="margin-top: 5%;">
+			<!-- <h5 style="margin-top: 2%;">Page numéro : <span id="affichageNumPage"></span></h5> -->
+			<h4>Générateur de questions de cours</h4>
+			<hr />
+		</div>	
+
+		<!-- Page de contenu  -->
+		<div class="vue-exclusive" id="pageImportDocument" default>
+			<h5>Importation du document</h5>
+			<p>Importez d'abord votre support de cours au format PDF. Une fois celui-ci importé, un résumé va être généré automatiquement.</p>
+			<!-- <label for="upload-button">Sélection du PDF</label> -->
+			<button id="upload-button" class="button-primary u-full-width" onclick="document.getElementById('pdffile').click();">Charger PDF</button> 
+			<input type="file" id="pdffile" accept="application/pdf" onchange="extrait_texte_PDF();" style="display: none;"/>
+
+		</div>
+
+
+		<div class="vue-exclusive" id="pageResume" style="display: none;">
+			<div class="vue-exclusive" id="resume_en_cours" default>
+				<h5>Génération du résumé en cours</h5>
+				<p>Veuillez patienter.... <i class="fas fa-sync-alt fa-spin"></i></p>
+			</div>
+			<div class="vue-exclusive" id="validationResume">
+				<h5>Validation du résumé </h5>
+				<p>Voici un résumé proposé par GPT. Vous pouvez le modifier ou en regénérer un nouveau s'il ne vous convient pas. Une fois vos modifications apportées, cliquez sur le bouton valider pour passer à la phase de génération des questions.</p>
+				<label for="resumeCours">Résumé du cours</label>
+				 <textarea class="u-full-width" rows="8" cols="33" placeholder="Copiez / collez ici le résumé de votre cours" id="resumeCours"></textarea>
+	
+				<div class="row">
+					<div class="one-half column">
+						<button class="button u-full-width" onclick="resume_PDF();"><i class="fas fa-sync-alt"></i> Regénère un résumé</button>
+					</div>
+					<div class="one-half column">				
+						<button class="button-success u-full-width" onclick="genere_questions(0.7, true);" id="btn_genere_questions"><i class="fas fa-check"></i> Valider</button>	
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Page d'affichage du résultat -->
+		<div class="vue-exclusive" id="pageListeQuestions" style="display: none;">
+			<div class="vue-exclusive" id="generation_questions_en_cours" default>
+				<h5>Génération des questions en cours</h5>
+				<p>Veuillez patienter.... <i class="fas fa-sync-alt fa-spin"></i></p>
+			</div>
+
+			<div class="vue-exclusive" id="pageValidationQuestion">
+				<h5>Validation des questions</h5>
+				<p>Voici les questions proposées par GPT. Vous pouvez les modifier ou en regénérer de nouvelles. Une fois vos modifications apportées, cliquez sur le bouton valider pour passer à la phase de génération des réponses.</p>
+
+				<table class="u-full-width" id="tableQuestions">
+					<tbody id="corps_table_liste_questions">
+					  <tr>
+						<td>Que signifie l'expressionnisme ?</td>
+						<td onclick="edit_question(0)"><i class="fas fa-pen"></i></td>
+						<td><i class="fas fa-trash"></i></td>
+					  </tr>
+					  <tr>
+						<td><input type="text" class="u-full-width" value="A votre avis, que se passerait-il si l'expressionnisme avait émergé dans un autre pays que l'Allemagne ou l'Autriche ?"></td>
+						<td><i class="fas fa-check"></i></td>
+						<td><i class="fas fa-times"></i></td>
+					  </tr>
+					</tbody>
+				</table>	
+	
+				<div class="row">
+					<div class="one-half column">
+						<button class="button u-full-width" onclick="genere_questions(1.4, false)"><i class="fas fa-sync-alt"></i> Regénère des questions</button>
+					</div>
+					<div class="one-half column">
+						<button class="button-success u-full-width" onclick="genere_reponses()"><i class="fas fa-check"></i> Valider</button>
+					</div>
+				</div>
+			</div>
+		</div>		
+
+
+		<!-- Page de validation des réponses -->
+		<div class="vue-exclusive" id="pageListeReponses" style="display: none;">
+
+			<div class="vue-exclusive" id="generation_reponses_en_cours" default>
+				<h5>Génération des réponses en cours</h5>
+				<p>Veuillez patienter.... <i class="fas fa-sync-alt fa-spin"></i></p>
+			</div>
+
+			<div class="vue-exclusive" id="pageValidationReponses">
+				<h5>Validation des réponses</h5>
+				<p>Voici les réponses proposées par GPT question par quesitons. Vous pouvez les modifier. Une fois vos modifications apportées, cliquez sur le bouton valider pour passer à la question suivante.</p>
+
+				<p><strong>Question <span id="numeroQuestion">1</span>/<span id="nombreQuestions"></span> : </strong><span id="texteQuestion">Que signifie l'expressionnisme ?</span></p>
+
+				<label for="reponseQuestion">Réponse GPT :</label>
+				<textarea class="u-full-width" rows="6" cols="33" id="reponseQuestion"></textarea>
+				<button class="button u-full-width" id="btn_question_suivante">Question suivante</button>
+			</div>
+
+		</div>
+
+		<!-- Page bilan -->
+		<div class="vue-exclusive" id="pageSynthese" style="display: none;">
+			<h5>Bilan des Q/R générées</h5>
+
+			<div id="divListeQR">
+
+			</div>
+
+			<div>
+				<button class="button-primary u-full-width" onclick=""><i class="fas fa-download"></i> Export Moodle</button>	
+			</div>			
+		</div>
+
+		<!-- Pied de page -->		
+		<div class="vue-fixe">
+		</div>
+
+	</div>
+
+</body>
+
+</html>
