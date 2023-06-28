@@ -31,8 +31,7 @@
 	<script src="scripts/generationQR.js"></script>
 	<script src="scripts/lecturePDF.js"></script>
 	<script src="https://npmcdn.com/pdfjs-dist/build/pdf.js"></script>
-	<!-- <script src="scripts/pdfjs/pdf.js"></script> -->
-	
+	<script src="scripts/exportation.js"></script>	
 
 </head>
 
@@ -149,9 +148,14 @@
 
 			</div>
 
-			<div>
-				<button class="button-primary u-full-width" onclick=""><i class="fas fa-download"></i> Export Moodle</button>	
-			</div>			
+			<div class="row">
+				<div class="one-half column">
+					<button class="button u-full-width" onclick="export_questions_JSON()"><i class="fas fa-download"></i> Export JSON</button>	
+				</div>
+				<div class="one-half column">
+					<button class="button-primary u-full-width" onclick="export_questions_Moodle()"><i class="fas fa-download"></i> Export Moodle</button>	
+				</div>
+			</div>
 		</div>
 
 		<!-- Pied de page -->		

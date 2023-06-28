@@ -12,7 +12,7 @@ var listeQuestionsTypes = ["Que signifie ... ?",
     "A votre avis, que se passerait-il si . . . ?",
     "Comment . . . pourrait-il affecter . . . ?"];
 
-var listeQuestions = ["Que signifie l'équilibre thermodynamique ?", "A votre avis, que se passerait-il si l'on chauffait un gaz à volume constant ?"];
+var listeQuestions = [];
 var listeQuestionsReponses = [];
 
 

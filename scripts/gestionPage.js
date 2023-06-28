@@ -20,6 +20,8 @@ function affiche_questions(nouvelles_questions, nouveau_theme) {
 
     var tableau_liste_questions = document.getElementById("tableQuestions");
 
+    const nombre_questions_initiales = nouveau_theme ? 0 : listeQuestions.length;
+
     if(nouveau_theme) {
         // on efface tout le tableau
         while (tableau_liste_questions.firstChild) {
@@ -27,7 +29,7 @@ function affiche_questions(nouvelles_questions, nouveau_theme) {
         }
 
         listeQuestions = nouvelles_questions;
-    } else {
+    } else {        
         listeQuestions = listeQuestions.concat(nouvelles_questions);
     }
 
@@ -46,12 +48,12 @@ function affiche_questions(nouvelles_questions, nouveau_theme) {
 
         var cellule_edit = document.createElement("td");
         cellule_edit.innerHTML = '<i class="fas fa-pen"></i>';
-        cellule_edit.setAttribute("onclick", "edit_question(" + index + ");");
+        cellule_edit.setAttribute("onclick", "edit_question(" + (index + nombre_questions_initiales) + ");");
         ligne.appendChild(cellule_edit);
 
         var cellule_delete = document.createElement("td");
         cellule_delete.innerHTML = '<i class="fas fa-trash"></i>';
-        cellule_delete.setAttribute("onclick", "supprime_Question(" + index + ");");
+        cellule_delete.setAttribute("onclick", "supprime_Question(" + (index + nombre_questions_initiales) + ");");
         ligne.appendChild(cellule_delete);
     
         tblBody.appendChild(ligne);
@@ -202,3 +204,4 @@ function affiche_page_bilan() {
 
 	afficheVue("pageSynthese");
 }
+
