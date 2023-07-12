@@ -2,19 +2,28 @@ var OPENAI_API_KEY = "";
 var url_GPT = 'https://api.openai.com/v1/chat/completions';
 var model_GPT = "gpt-3.5-turbo-16k"; // alternative : "gpt-3.5-turbo"
 
-var listeQuestionsTypes = ["Que signifie ... ?",
+var listeQuestionsTypes = [["Que signifie ... ?",
     "Quelle est la cause de ... ?", 
     "Décrivez ... avec vos propres mots.",
-    "Expliquez pourquoi . . .",
+    "Expliquez pourquoi ...",
     "Comment ... pourrait-il affecter ... ?",
-    "Donnez un nouvel exemple de . . . ?",
+    "Donnez un nouvel exemple de ... ?",
     "Comment utiliseriez-vous ... pour... ?",
-    "A votre avis, que se passerait-il si . . . ?",
-    "Comment . . . pourrait-il affecter . . . ?"];
+    "A votre avis, que se passerait-il si ... ?",
+    "Comment ... pourrait-il affecter ... ?"],
+    ["Résumez ... avec vos propres mots.",
+    "Comment utiliseriez-vous ... pour... ?",
+    "En quoi ... et ... sont-ils similaires ?",
+    "En quoi ... et ... sont-ils différents ?",
+    "Comparez ... et ... au regard de ... .",
+    "Quelles sont les forces et les faiblesses de ... ?",
+    "A votre avis, qu’est-ce qui cause ... ? Pourquoi ?",
+    "Êtes-vous d’accord ou non avec l’affirmation suivante : ... ?"]];
+
+var selectionQuestion = 0;
 
 var listeQuestions = [];
 var listeQuestionsReponses = [];
-
 
 function resume_PDF() {
     afficheVue("resume_en_cours"); // si on regénère le résumé
@@ -42,7 +51,7 @@ function resume_PDF() {
 
     var prompt = "Voici le contenu d'un cours : \n\n";
     prompt += texte_pdf;
-    prompt += "\n\nQuelles sont les 7 idées principales de ce cours ? Explique chacune de celles-ci en trois lignes.";    
+    prompt += "\n\nQuelles sont les 7 idées principales de ce cours ? Explique chacune de celles-ci en trois lignes.";
     //console.log(prompt);
 
     data = {        
@@ -64,7 +73,7 @@ function resume_PDF() {
 }
 
 
-function genere_questions(temperature, nouveau_theme, bouton) {    
+function genere_questions(temperature, nouveau_theme) {    
 
     afficheVue("generation_questions_en_cours"); // si on reregénère les questions
     afficheVue("pageListeQuestions");
@@ -96,7 +105,11 @@ function genere_questions(temperature, nouveau_theme, bouton) {
 
     var fin_prompt = "Complète la liste de questions à trous-ci dessous en utilisant les idées principales du cours dans un ordre quelconque.\n\n";
     //var fin_prompt = "Complète la liste de questions à trous-ci dessous en utilisant les idées principales du cours de manière la plus pertinente possible.\n\n";
-    listeQuestionsTypes.forEach(function(texte_question) {
+
+    var questions_types = listeQuestionsTypes[selectionQuestion];                  // selectionne parmi une première liste
+    selectionQuestion = (selectionQuestion + 1) % listeQuestionsTypes.length; // la prochaine fois on change de questions
+
+    questions_types.forEach(function(texte_question) {
         fin_prompt += texte_question + "\n";
     });
     fin_prompt += "\n\nUtilise une ligne par question et commence celle-ci directement par la question sans utiliser de numérotation ni de tirets."    

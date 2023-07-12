@@ -55,7 +55,8 @@
 			<!-- <label for="upload-button">Sélection du PDF</label> -->
 			<button id="upload-button" class="button-primary u-full-width" onclick="document.getElementById('pdffile').click();">Charger PDF</button> 
 			<input type="file" id="pdffile" accept="application/pdf" onchange="extrait_texte_PDF();" style="display: none;"/>
-
+			<p>Alternativement, si vous avez déjà un résumé textuel disponible, vous pouvez le copier/coller directement.</p>
+			<button class="u-full-width" onclick="afficheVue('pageResume'); afficheVue('validationResume');">Écrire directement le résumé</button>
 		</div>
 
 
@@ -109,7 +110,7 @@
 	
 				<div class="row">
 					<div class="one-half column">
-						<button class="button u-full-width" onclick="genere_questions(1.4, false)"><i class="fas fa-sync-alt"></i> Regénère des questions</button>
+						<button class="button u-full-width" onclick="genere_questions(0.7, false)"><i class="fas fa-sync-alt"></i> Regénère des questions</button>
 					</div>
 					<div class="one-half column">
 						<button class="button-success u-full-width" onclick="genere_reponses()"><i class="fas fa-check"></i> Valider</button>

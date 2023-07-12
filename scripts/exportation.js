@@ -39,6 +39,7 @@ function creeXMLmoodle(nomFichier) {
     // ecriture des questions
 	listeQuestionsReponses.forEach(function(QR) {
 		contenu += ecritQuestionOuverte(QR.question, QR.reponse);
+		contenu += ecritExplication(QR.question, QR.reponse);
 	});
     
     // fin du fichier
@@ -83,6 +84,27 @@ function ecritQuestionOuverte(question, reponse) {
 	return questionXML;
 }
 
+function ecritExplication(question, reponse) {
+	// entete de la question
+	var questionXML = "<question type=\"description\">" + "\n";	
+
+	// nom de la question
+	questionXML += "<name><text>Rep : " + question + "</text></name>" +  "\n";
+
+	// enonce de la question
+	questionXML += "<questiontext format=\"html\">" + "\n";
+	questionXML += "<text>" + reponse + "</text>" + "\n";
+	questionXML += "</questiontext>" + "\n";
+
+	// feedback
+	questionXML += "<generalfeedback format=\"html\">" + "\n";
+	questionXML += "<text></text>";
+	questionXML += "</generalfeedback>" + "\n";
+
+	questionXML += "</question>" + "\n";
+
+	return questionXML;
+}
 
 function ecritCategorie(nomFichier) {
 	var categorie = "<question type=\"category\">" + "\n";
